@@ -20,7 +20,7 @@ public class Main {
             us.saveUser(user.getName(), user.getLastName(), user.getAge());
             System.out.println("User с именем " +  user.getName() + " добавлен в базу данных");
         }
-        us.saveUser(user1.getName(), user1.getLastName(), user1.getAge());
+
 
         List<User> usersBD = us.getAllUsers();
         for (User user: usersBD) {
