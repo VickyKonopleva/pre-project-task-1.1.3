@@ -1,4 +1,9 @@
 package jm.task.core.jdbc.util;
+import jm.task.core.jdbc.model.User;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,14 +18,17 @@ public class Util {
     public static Connection getConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        } catch (ClassNotFoundException|SQLException ex) {
             ex.printStackTrace();
         }
-        try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return connection;
+    }
+
+    public static Session getSession() {
+        SessionFactory sessionFactory = null;
+        Configuration configuration = new Configuration().addAnnotatedClass(User.class);
+        sessionFactory = configuration.buildSessionFactory();
+        return sessionFactory.getCurrentSession();
     }
 }

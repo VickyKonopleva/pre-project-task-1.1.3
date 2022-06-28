@@ -14,13 +14,12 @@ public class Main {
         User user2 = new User("Ross", "Korol", (byte) 24);
         User user3 = new User("John", "Snow", (byte) 29);
         User user4 = new User("Jimmy", "Choo", (byte) 49);
-        ArrayList<User> users= new ArrayList<>(List.of(user1, user2, user3, user4));
+        List<User> users= List.of(user1, user2, user3, user4);
         us.createUsersTable();
         for (User user: users) {
             us.saveUser(user.getName(), user.getLastName(), user.getAge());
             System.out.println("User с именем " +  user.getName() + " добавлен в базу данных");
         }
-
 
         List<User> usersBD = us.getAllUsers();
         for (User user: usersBD) {
