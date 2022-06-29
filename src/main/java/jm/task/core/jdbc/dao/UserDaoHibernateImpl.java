@@ -10,11 +10,11 @@ public class UserDaoHibernateImpl implements UserDao {
     public UserDaoHibernateImpl() {
 
     }
-
+    SessionFactory sessionFactory = Util.getSessionFactory();
 
     @Override
     public void createUsersTable() {
-        try (SessionFactory sessionFactory = Util.getSessionFactory(); Session session = sessionFactory.getCurrentSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS USER("
                     + "id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,"
@@ -27,7 +27,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        try (SessionFactory sessionFactory = Util.getSessionFactory(); Session session = sessionFactory.getCurrentSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             session.createSQLQuery("DROP TABLE IF EXISTS USER").executeUpdate();
             session.getTransaction().commit();
@@ -36,7 +36,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        try (SessionFactory sessionFactory = Util.getSessionFactory(); Session session = sessionFactory.getCurrentSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             User user = new User(name, lastName, age);
             session.persist(user);
@@ -46,7 +46,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        try (SessionFactory sessionFactory = Util.getSessionFactory(); Session session = sessionFactory.getCurrentSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             User user = session.get(User.class, id);
             session.remove(user);
@@ -58,7 +58,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> users = null;
-        try (SessionFactory sessionFactory = Util.getSessionFactory(); Session session = sessionFactory.getCurrentSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             users = session.createQuery("From User").getResultList();
             session.getTransaction().commit();
@@ -70,7 +70,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
 
-        try (SessionFactory sessionFactory = Util.getSessionFactory(); Session session = sessionFactory.getCurrentSession()) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             session.createSQLQuery("TRUNCATE TABLE USER").executeUpdate();
             session.getTransaction().commit();
