@@ -25,10 +25,9 @@ public class Util {
         return connection;
     }
 
-    public static Session getSession() {
-        SessionFactory sessionFactory = null;
+    public static SessionFactory getSessionFactory() {
+        Session session = null;
         Configuration configuration = new Configuration().addAnnotatedClass(User.class);
-        sessionFactory = configuration.buildSessionFactory();
-        return sessionFactory.getCurrentSession();
+        return configuration.buildSessionFactory();
     }
 }
