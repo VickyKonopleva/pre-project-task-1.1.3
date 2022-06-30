@@ -25,6 +25,7 @@ public class Main {
         for (User user: usersBD) {
             System.out.println(user);
         }
+
         us.cleanUsersTable();
         us.dropUsersTable();
     }

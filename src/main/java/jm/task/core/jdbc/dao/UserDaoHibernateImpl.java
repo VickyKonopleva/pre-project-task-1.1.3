@@ -1,8 +1,10 @@
 package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.util.Util;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -21,7 +23,11 @@ public class UserDaoHibernateImpl implements UserDao {
                     + " name VARCHAR(20),"
                     + " lastname VARCHAR(20), "
                     + "age SMALLINT)").executeUpdate();
-            session.getTransaction().commit();
+            try {
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                session.getTransaction().rollback();
+            }
         }
     }
 
@@ -30,7 +36,11 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             session.createSQLQuery("DROP TABLE IF EXISTS USER").executeUpdate();
-            session.getTransaction().commit();
+            try {
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                session.getTransaction().rollback();
+            }
         }
     }
 
@@ -40,7 +50,11 @@ public class UserDaoHibernateImpl implements UserDao {
             session.beginTransaction();
             User user = new User(name, lastName, age);
             session.persist(user);
-            session.getTransaction().commit();
+            try {
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                session.getTransaction().rollback();
+            }
         }
     }
 
@@ -48,10 +62,12 @@ public class UserDaoHibernateImpl implements UserDao {
     public void removeUserById(long id) {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            User user = session.get(User.class, id);
-            session.remove(user);
-            session.getTransaction().commit();
-            session.close();
+            session.createQuery("delete from User where id = :id").setParameter("id", id).executeUpdate();
+            try {
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                session.getTransaction().rollback();
+            }
         }
     }
 
@@ -61,8 +77,11 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             users = session.createQuery("From User").getResultList();
-            session.getTransaction().commit();
-            session.close();
+            try {
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                session.getTransaction().rollback();
+            }
         }
         return users;
     }
@@ -73,8 +92,11 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             session.createSQLQuery("TRUNCATE TABLE USER").executeUpdate();
-            session.getTransaction().commit();
-            session.close();
+            try {
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                session.getTransaction().rollback();
+            }
         }
     }
 }
